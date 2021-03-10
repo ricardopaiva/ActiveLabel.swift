@@ -414,8 +414,22 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
         
         return mutAttrString
     }
+
+    public func updateAttributesWhenSelected() {
+        guard let selectedElement = selectedElement else {
+            return
+        }
+        
+        let type = selectedElement.type
+        var isSelected = true
+        if let _ = selectedElements[type]?.firstIndex(where: { $0.type == selectedElement.type && $0.range == selectedElement.range }) {
+            isSelected = false
+        }
+        
+        self.updateAttributesWhenSelected(isSelected)
+    }
     
-    public func updateAttributesWhenSelected(_ isSelected: Bool) {
+    fileprivate func updateAttributesWhenSelected(_ isSelected: Bool) {
         guard let selectedElement = selectedElement else {
             return
         }
@@ -423,6 +437,12 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
         var attributes = textStorage.attributes(at: 0, effectiveRange: nil)
         let type = selectedElement.type
         
+        if let index = selectedElements[selectedElement.type]?.firstIndex(where: { $0.type == selectedElement.type && $0.range == selectedElement.range }) {
+            selectedElements[selectedElement.type]?.remove(at: index)
+        } else {
+            selectedElements[selectedElement.type]?.append(selectedElement)
+        }
+
         if isSelected {
             let selectedColor: UIColor
             switch type {

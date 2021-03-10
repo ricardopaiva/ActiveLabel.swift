@@ -11,6 +11,7 @@ import UIKit
 
 public protocol ActiveLabelDelegate: class {
     func didSelect(_ text: String, type: ActiveType)
+    func didSelect(_ text: String, type: ActiveType, range: NSRange)
 }
 
 public typealias ConfigureLinkAttribute = (ActiveType, [NSAttributedString.Key : Any], Bool) -> ([NSAttributedString.Key : Any])
@@ -83,7 +84,7 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
         urlTapHandler = handler
     }
     
-    open func handleCustomTap(for type: ActiveType, handler: @escaping (String) -> ()) {
+    open func handleCustomTap(for type: ActiveType, handler: @escaping (String,NSRange) -> ()) {
         customTapHandlers[type] = handler
     }
     
@@ -221,7 +222,7 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
             case .mention(let userHandle): didTapMention(userHandle)
             case .hashtag(let hashtag): didTapHashtag(hashtag)
             case .url(let originalURL, _): didTapStringURL(originalURL)
-            case .custom(let element): didTap(element, for: selectedElement.type)
+            case .custom(let element): didTap(element, for: selectedElement.type, range: selectedElement.range)
             case .email(let element): didTapStringEmail(element)
             }
             
@@ -251,7 +252,7 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
     internal var hashtagTapHandler: ((String) -> ())?
     internal var urlTapHandler: ((URL) -> ())?
     internal var emailTapHandler: ((String) -> ())?
-    internal var customTapHandlers: [ActiveType : ((String) -> ())] = [:]
+    internal var customTapHandlers: [ActiveType : ((String,NSRange) -> ())] = [:]
     
     fileprivate var mentionFilterPredicate: ((String) -> Bool)?
     fileprivate var hashtagFilterPredicate: ((String) -> Bool)?
@@ -541,12 +542,12 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
         emailHandler(stringEmail)
     }
     
-    fileprivate func didTap(_ element: String, for type: ActiveType) {
+    fileprivate func didTap(_ element: String, for type: ActiveType, range: NSRange) {
         guard let elementHandler = customTapHandlers[type] else {
-            delegate?.didSelect(element, type: type)
+            delegate?.didSelect(element, type: type, range: range)
             return
         }
-        elementHandler(element)
+        elementHandler(element, range)
     }
 }
 

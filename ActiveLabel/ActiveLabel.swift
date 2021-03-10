@@ -262,6 +262,7 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
     fileprivate lazy var layoutManager = NSLayoutManager()
     fileprivate lazy var textContainer = NSTextContainer()
     public lazy var activeElements = [ActiveType: [ElementTuple]]()
+    public lazy var selectedElements = [ActiveType: [ElementTuple]]()
     
     // MARK: - helper functions
     
@@ -279,6 +280,7 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
         // clean up previous active elements
         guard let attributedText = attributedText, attributedText.length > 0 else {
             clearActiveElements()
+            clearSelectedElements()
             textStorage.setAttributedString(NSAttributedString())
             setNeedsDisplay()
             return
@@ -288,6 +290,7 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
         
         if parseText {
             clearActiveElements()
+            clearSelectedElements()
             let newString = parseTextAndExtractActiveElements(mutAttrString)
             mutAttrString.mutableString.setString(newString)
         }
@@ -307,6 +310,13 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
         }
     }
     
+    fileprivate func clearSelectedElements() {
+        selectedElement = nil
+        for (type, _) in selectedElements {
+            selectedElements[type]?.removeAll()
+        }
+    }
+
     fileprivate func textOrigin(inRect rect: CGRect) -> CGPoint {
         let usedRect = layoutManager.usedRect(for: textContainer)
         heightCorrection = (rect.height - usedRect.height)/2
@@ -363,6 +373,9 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
             textLength = textString.utf16.count
             textRange = NSRange(location: 0, length: textLength)
             activeElements[.url] = urlElements
+            
+            let emptyElements: [ElementTuple] = []
+            selectedElements[.url] = emptyElements
         }
         
         for type in enabledTypes where type != .url {
@@ -374,6 +387,9 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
             }
             let hashtagElements = ActiveBuilder.createElements(type: type, from: textString, range: textRange, filterPredicate: filter)
             activeElements[type] = hashtagElements
+            
+            let emptyElements: [ElementTuple] = []
+            selectedElements[type] = emptyElements
         }
         
         return textString

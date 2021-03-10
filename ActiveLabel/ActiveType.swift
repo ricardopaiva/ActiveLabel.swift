@@ -15,7 +15,7 @@ public enum ActiveElement {
     case url(original: String, trimmed: String)
     case custom(String)
     
-    static func create(with activeType: ActiveType, text: String) -> ActiveElement {
+    public static func create(with activeType: ActiveType, text: String) -> ActiveElement {
         switch activeType {
         case .mention: return mention(text)
         case .hashtag: return hashtag(text)

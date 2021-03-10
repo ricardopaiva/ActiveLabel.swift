@@ -8,11 +8,11 @@
 
 import Foundation
 
-typealias ActiveFilterPredicate = ((String) -> Bool)
+public typealias ActiveFilterPredicate = ((String) -> Bool)
 
-struct ActiveBuilder {
+public struct ActiveBuilder {
 
-    static func createElements(type: ActiveType, from text: String, range: NSRange, filterPredicate: ActiveFilterPredicate?) -> [ElementTuple] {
+    public static func createElements(type: ActiveType, from text: String, range: NSRange, filterPredicate: ActiveFilterPredicate?) -> [ElementTuple] {
         switch type {
         case .mention, .hashtag:
             return createElementsIgnoringFirstCharacter(from: text, for: type, range: range, filterPredicate: filterPredicate)
@@ -25,7 +25,7 @@ struct ActiveBuilder {
         }
     }
 
-    static func createURLElements(from text: String, range: NSRange, maximumLength: Int?) -> ([ElementTuple], String) {
+    public static func createURLElements(from text: String, range: NSRange, maximumLength: Int?) -> ([ElementTuple], String) {
         let type = ActiveType.url
         var text = text
         let matches = RegexParser.getElements(from: text, with: type.pattern, range: range)

@@ -14,7 +14,7 @@ public protocol ActiveLabelDelegate: class {
 }
 
 public typealias ConfigureLinkAttribute = (ActiveType, [NSAttributedString.Key : Any], Bool) -> ([NSAttributedString.Key : Any])
-typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveType)
+public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveType)
 
 @IBDesignable open class ActiveLabel: UILabel {
     
@@ -256,12 +256,12 @@ typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveTy
     fileprivate var mentionFilterPredicate: ((String) -> Bool)?
     fileprivate var hashtagFilterPredicate: ((String) -> Bool)?
     
-    fileprivate var selectedElement: ElementTuple?
+    public var selectedElement: ElementTuple?
     fileprivate var heightCorrection: CGFloat = 0
     internal lazy var textStorage = NSTextStorage()
     fileprivate lazy var layoutManager = NSLayoutManager()
     fileprivate lazy var textContainer = NSTextContainer()
-    lazy var activeElements = [ActiveType: [ElementTuple]]()
+    public lazy var activeElements = [ActiveType: [ElementTuple]]()
     
     // MARK: - helper functions
     
@@ -398,7 +398,7 @@ typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveTy
         return mutAttrString
     }
     
-    fileprivate func updateAttributesWhenSelected(_ isSelected: Bool) {
+    func updateAttributesWhenSelected(_ isSelected: Bool) {
         guard let selectedElement = selectedElement else {
             return
         }

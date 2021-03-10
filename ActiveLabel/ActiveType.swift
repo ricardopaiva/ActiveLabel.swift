@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum ActiveElement {
+public enum ActiveElement {
     case mention(String)
     case hashtag(String)
     case email(String)

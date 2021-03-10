@@ -414,7 +414,7 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
         return mutAttrString
     }
     
-    func updateAttributesWhenSelected(_ isSelected: Bool) {
+    public func updateAttributesWhenSelected(_ isSelected: Bool) {
         guard let selectedElement = selectedElement else {
             return
         }

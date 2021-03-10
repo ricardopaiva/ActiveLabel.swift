@@ -510,7 +510,7 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
     }
     
     //MARK: - ActiveLabel handler
-    fileprivate func didTapMention(_ username: String) {
+    public func didTapMention(_ username: String) {
         guard let mentionHandler = mentionTapHandler else {
             delegate?.didSelect(username, type: .mention)
             return
@@ -518,7 +518,7 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
         mentionHandler(username)
     }
     
-    fileprivate func didTapHashtag(_ hashtag: String) {
+    public func didTapHashtag(_ hashtag: String) {
         guard let hashtagHandler = hashtagTapHandler else {
             delegate?.didSelect(hashtag, type: .hashtag)
             return
@@ -526,7 +526,7 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
         hashtagHandler(hashtag)
     }
     
-    fileprivate func didTapStringURL(_ stringURL: String) {
+    public func didTapStringURL(_ stringURL: String) {
         guard let urlHandler = urlTapHandler, let url = URL(string: stringURL) else {
             delegate?.didSelect(stringURL, type: .url)
             return
@@ -534,7 +534,7 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
         urlHandler(url)
     }
     
-    fileprivate func didTapStringEmail(_ stringEmail: String) {
+    public func didTapStringEmail(_ stringEmail: String) {
         guard let emailHandler = emailTapHandler else {
             delegate?.didSelect(stringEmail, type: .email)
             return
@@ -542,7 +542,7 @@ public typealias ElementTuple = (range: NSRange, element: ActiveElement, type: A
         emailHandler(stringEmail)
     }
     
-    fileprivate func didTap(_ element: String, for type: ActiveType, range: NSRange) {
+    public func didTap(_ element: String, for type: ActiveType, range: NSRange) {
         guard let elementHandler = customTapHandlers[type] else {
             delegate?.didSelect(element, type: type, range: range)
             return
